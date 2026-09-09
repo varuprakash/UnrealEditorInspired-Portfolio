@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrakashVaru - Unreal Editor</title>
+    <meta
+      name="description"
+      content="Game Programmer / Unreal Engine. C++, Blueprints, gameplay systems, digital twins, and marketplace plugins."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="editor">
+      <header class="titlebar">
+        <div class="titlebar-left">
+          <div class="ue-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="18" height="18">
+              <circle cx="16" cy="16" r="15.2" fill="#111" />
+              <path
+                d="M9.2 22.6V9.4h6.1c3.35 0 5.4 1.85 5.4 4.65 0 2.05-1.15 3.55-3.05 4.15L22.6 22.6h-3.05l-4.55-4.75H11.9V22.6H9.2zm2.7-7.2h3.15c1.75 0 2.8-.95 2.8-2.35s-1.05-2.35-2.8-2.35H11.9v4.7z"
+                fill="#fff"
+              />
+            </svg>
+          </div>
+          <span class="product">Unreal Editor</span>
+          <nav class="menubar" aria-label="Editor menu">
+            <button type="button" data-menu="file">File</button>
+            <button type="button" data-menu="edit">Edit</button>
+            <button type="button" data-menu="window">Window</button>
+            <button type="button" data-menu="tools">Tools</button>
+            <button type="button" data-menu="build">Build</button>
+            <button type="button" data-menu="help">Help</button>
+          </nav>
+        </div>
+        <div class="titlebar-center">PrakashVaru - Unreal Editor</div>
+        <div class="win-controls" aria-hidden="true">
+          <span class="win min"></span>
+          <span class="win max"></span>
+          <span class="win close"></span>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <button class="tb-icon" title="Save Current" aria-label="Save">
+          <svg viewBox="0 0 16 16"><path d="M2 2h9l3 3v9H2V2zm2 0v5h7V2H4zm0 7v5h8V9H4z" /></svg>
+        </button>
+        <button class="tb-add" title="Add">
+          <svg viewBox="0 0 16 16"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
+          Add
+          <i></i>
+        </button>
+        <span class="tb-sep"></span>
+        <div class="tool-group" role="toolbar" aria-label="Transform">
+          <button class="tool-btn" data-mode="select" title="Select Objects (Q)">
+            <svg viewBox="0 0 16 16"><path d="M3 1.5 12 8.2l-3.4.5 1.9 5.6-2 .6L8.5 9.2 3 12.4V1.5z" /></svg>
+          </button>
+          <button class="tool-btn" data-mode="move" title="Translate (W)">
+            <svg viewBox="0 0 16 16"><path d="M8 1 10.4 3.4H9.1v3.4h3.5V5.6L15 8l-2.4 2.4V9.2H9.1v3.4h1.3L8 15l-2.4-2.4h1.3V9.2H3.4v1.2L1 8l2.4-2.4v1.2h3.5V3.4H5.6L8 1z" /></svg>
+          </button>
+          <button class="tool-btn" data-mode="rotate" title="Rotate (E)">
+            <svg viewBox="0 0 16 16"><path d="M13.4 8A5.4 5.4 0 1 1 8 2.6V1l4.2 3.2L8 7.4V5.2a3.8 3.8 0 1 0 3.8 2.8h1.6z" /></svg>
+          </button>
+          <button class="tool-btn" data-mode="scale" title="Scale (R)">
+            <svg viewBox="0 0 16 16"><path d="M2 2h5.2v1.5H4.6L8 7 6.9 8.1 3.5 4.7v2.6H2V2zm12 12H8.8v-1.5h2.6L8 9l1.1-1.1 3.4 3.4V8.7H14V14z" /></svg>
+          </button>
+        </div>
+        <button class="coord-btn" id="coordBtn" title="World / Local">World</button>
+        <span class="tb-sep"></span>
+        <div class="play-group">
+          <button id="playBtn" class="play-btn" title="Play this level in the active viewport (Alt+P)">
+            <svg viewBox="0 0 16 16"><path d="M3.5 2.2v11.6L14 8 3.5 2.2z" /></svg>
+          </button>
+          <button id="pauseBtn" class="icon-btn" title="Pause" disabled>
+            <svg viewBox="0 0 16 16"><rect x="3" y="2.5" width="3.6" height="11"/><rect x="9.4" y="2.5" width="3.6" height="11"/></svg>
+          </button>
+          <button id="stopBtn" class="icon-btn" title="Stop" disabled>
+            <svg viewBox="0 0 16 16"><rect x="3.2" y="3.2" width="9.6" height="9.6"/></svg>
+          </button>
+          <button class="eject-btn" title="Eject">Eject</button>
+        </div>
+        <span class="tb-sep"></span>
+        <label class="snap"><input type="checkbox" checked /> Grid 10</label>
+        <label class="snap"><input type="checkbox" checked /> Rot 10°</label>
+        <label class="snap"><input type="checkbox" /> Scale</label>
+        <span class="tb-sep"></span>
+        <div class="platform">Windows</div>
+        <div class="tb-grow"></div>
+        <label class="quick-open">
+          <input id="quickOpen" type="search" placeholder="Ctrl+P  Open asset..." />
+        </label>
+        <div class="compile">
+          <span class="dot live"></span>
+          Compile
+        </div>
+      </div>
+
+      <div class="main">
+        <aside class="modes" aria-label="Editor modes">
+          <button class="mode active" title="Select" data-mode="select">Sel</button>
+          <button class="mode" title="Place" data-mode="place">Plc</button>
+          <button class="mode" title="Paint" data-mode="paint">Pnt</button>
+          <button class="mode" title="Landscape" data-mode="land">Lnd</button>
+          <button class="mode" title="Foliage" data-mode="fol">Fol</button>
+          <button class="mode" title="Modeling" data-mode="mod">Mod</button>
+        </aside>
+
+        <div class="workspace">
+          <aside class="panel outliner" id="outliner">
+            <div class="panel-tabs">
+              <button class="tab active">World Outliner</button>
+              <button class="tab" data-goto="contact">Layers</button>
+            </div>
+            <div class="panel-toolbar">
+              <input id="outlinerFilter" type="search" placeholder="Search..." />
+              <span class="count" id="actorCount">0 Actors</span>
+            </div>
+            <div class="outliner-head">
+              <span>Label</span>
+              <span>Type</span>
+            </div>
+            <div class="outliner-tree" id="outlinerTree"></div>
+          </aside>
+
+          <section class="viewport-wrap">
+            <div class="viewport" id="viewport">
+              <div class="vp-toolbar">
+                <button class="vp-dd active-dd" data-view="perspective">Perspective ▾</button>
+                <button class="vp-dd" data-view="lit">Lit ▾</button>
+                <button class="vp-dd" data-view="show">Show ▾</button>
+                <button class="vp-dd" data-view="unlit">Unlit</button>
+                <button class="vp-dd" data-view="wireframe">Wireframe</button>
+                <span class="vp-real">Realtime</span>
+              </div>
+              <div class="horizon"></div>
+              <div class="grid-floor"></div>
+              <div class="actor-rig" id="actorRig">
+                <div class="actor-cube">
+                  <div class="face f"></div>
+                  <div class="face b"></div>
+                  <div class="face l"></div>
+                  <div class="face r"></div>
+                  <div class="face t"></div>
+                  <div class="face bo"></div>
+                </div>
+                <div class="gizmo" aria-hidden="true">
+                  <div class="axis x"><span>X</span></div>
+                  <div class="axis y"><span>Y</span></div>
+                  <div class="axis z"><span>Z</span></div>
+                  <div class="gizmo-core"></div>
+                </div>
+                <div class="actor-label" id="actorLabel">BP_PrakashVaru</div>
+              </div>
+              <div class="viewport-stats">
+                <div>FPS: <b id="fpsVal">120</b></div>
+                <div>MS: <b id="msVal">8.3</b></div>
+                <div>Tris: <b>48.2k</b></div>
+                <div>Draws: <b>86</b></div>
+              </div>
+              <div class="vp-axis-widget" aria-hidden="true">
+                <i class="ax x"></i><i class="ax y"></i><i class="ax z"></i>
+              </div>
+              <div class="cam-speed">Camera Speed 4</div>
+              <div class="pie-banner hidden" id="pieBanner">PLAYING IN EDITOR  —  Shift+F1 mouse  ·  Esc stop</div>
+            </div>
+          </section>
+
+          <aside class="panel details" id="details">
+            <div class="panel-tabs">
+              <button class="tab active">Details</button>
+              <button class="tab" id="worldSettingsTab">World Settings</button>
+            </div>
+            <div class="details-search">
+              <input type="search" placeholder="Search Details" />
+            </div>
+            <div class="details-body" id="detailsBody"></div>
+          </aside>
+        </div>
+      </div>
+
+      <section class="dock">
+        <div class="panel-tabs dock-tabs">
+          <button class="tab active" data-dock="content">Content Browser</button>
+          <button class="tab" data-dock="log">Output Log</button>
+        </div>
+        <div class="dock-content" id="dockContent">
+          <div class="cb-toolbar">
+            <button class="cb-btn">+ Add</button>
+            <button class="cb-btn">Import</button>
+            <button class="cb-btn">Save All</button>
+            <span class="path">/All/Game/MadMonk</span>
+            <span class="tb-grow"></span>
+            <button class="tab mini" data-filter="all">All</button>
+            <button class="tab mini" data-filter="professional">Professional</button>
+            <button class="tab mini" data-filter="prototype">MadMonk</button>
+            <button class="tab mini" data-filter="system">Systems</button>
+          </div>
+          <div class="browser-body">
+            <div class="folder-tree">
+              <div class="folder active" data-filter="all">▸ Content</div>
+              <div class="folder nested" data-filter="professional"> ▸ Professional</div>
+              <div class="folder nested" data-filter="prototype"> ▸ MadMonk</div>
+              <div class="folder nested" data-filter="system"> ▸ Systems</div>
+              <div class="folder nested" data-filter="all"> ▸ Developers / PrakashVaru</div>
+            </div>
+            <div class="asset-grid" id="assetGrid"></div>
+          </div>
+        </div>
+        <pre class="output-log hidden" id="fullLog"></pre>
+      </section>
+
+      <footer class="statusbar">
+        <div class="log" id="outputLog"></div>
+        <div class="status-right">
+          <span>Source Control: Git</span>
+          <span>Compile: Succeeded</span>
+          <span>Cmd</span>
+          <span id="clock"></span>
+        </div>
+      </footer>
+    </div>
+
+    <div class="dropdown" id="menuDropdown" hidden></div>
+    <script src="src/data.js"></script>
+    <script src="src/main.js"></script>
+  </body>
+</html>
