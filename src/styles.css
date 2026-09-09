@@ -713,12 +713,58 @@ svg {
   text-shadow: 0 1px 2px #000;
 }
 
+.viewport-hud {
+  position: absolute;
+  left: 54px;
+  right: 140px;
+  bottom: 22px;
+  max-width: 640px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.viewport-hud .ue-btn {
+  pointer-events: auto;
+}
+
+.hero-card h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.hero-card .role {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.hero-card p {
+  margin: 8px 0 12px;
+  max-width: 62ch;
+  color: #d4d4d4;
+  line-height: 1.5;
+  text-shadow: 0 2px 10px #000;
+}
+
+.hud-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .vp-axis-widget {
   position: absolute;
-  left: 12px;
-  bottom: 28px;
+  left: 10px;
+  bottom: 18px;
   width: 42px;
   height: 42px;
+  z-index: 3;
 }
 
 .ax {
@@ -864,6 +910,13 @@ svg {
 .ue-btn.primary {
   background: #3e3e3e;
   border-color: var(--accent);
+}
+
+.hero-card .ue-btn.primary {
+  background: linear-gradient(#f0b040, #c77a12);
+  border-color: #a86410;
+  color: #1a1208;
+  font-weight: 600;
 }
 
 .skill-bars {

@@ -96,6 +96,24 @@ function renderDetails(id) {
 function renderActor(id) {
   const d = getDetail(id);
   $("actorLabel").textContent = d.title.length > 28 ? d.title.slice(0, 26) + "…" : d.title;
+
+  const isHero = id === "hero" || id === "world";
+  $("viewportHud").innerHTML = `
+    <div class="hero-card">
+      <div class="role">${isHero ? profile.role : d.category + "  ·  Selected"}</div>
+      <h1>${isHero ? profile.name : d.title}</h1>
+      <p>${d.body}</p>
+      <div class="hud-actions">
+        ${(d.cta || [{ label: "Inspect Details", href: "#details" }])
+          .slice(0, 3)
+          .map(
+            (c, i) =>
+              `<a class="ue-btn ${i === 0 ? "primary" : ""}" href="${c.href}" ${c.href.startsWith("http") || c.href.startsWith("mailto") || c.href.startsWith("tel") ? 'target="_blank" rel="noreferrer"' : ""}>${c.label}</a>`
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
 }
 
 function renderAssets() {
