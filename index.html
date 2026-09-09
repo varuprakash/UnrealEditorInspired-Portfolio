@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PrakashVaru - Unreal Editor</title>
+    <title>PrakashVaru - Unreal Editor 5.4</title>
     <meta
       name="description"
       content="Game Programmer / Unreal Engine. C++, Blueprints, gameplay systems, digital twins, and marketplace plugins."
@@ -11,25 +11,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="src/styles.css" />
   </head>
   <body>
     <div class="editor">
+      <!-- UE5 Titlebar -->
       <header class="titlebar">
         <div class="titlebar-left">
-          <div class="ue-mark" aria-hidden="true">
+          <div class="ue-mark" title="Unreal Engine 5.4.4" aria-label="Unreal Engine">
             <svg viewBox="0 0 32 32" width="18" height="18">
-              <circle cx="16" cy="16" r="15.2" fill="#111" />
+              <circle cx="16" cy="16" r="15.2" fill="#0d0d0d" />
               <path
-                d="M9.2 22.6V9.4h6.1c3.35 0 5.4 1.85 5.4 4.65 0 2.05-1.15 3.55-3.05 4.15L22.6 22.6h-3.05l-4.55-4.75H11.9V22.6H9.2zm2.7-7.2h3.15c1.75 0 2.8-.95 2.8-2.35s-1.05-2.35-2.8-2.35H11.9v4.7z"
-                fill="#fff"
+                d="M16 2.5C8.54 2.5 2.5 8.54 2.5 16s6.04 13.5 13.5 13.5 13.5-6.04 13.5-13.5S23.46 2.5 16 2.5zm0 2.2c6.24 0 11.3 5.06 11.3 11.3s-5.06 11.3-11.3 11.3S4.7 22.24 4.7 16 9.76 4.7 16 4.7zm-6.2 16.5v-10.4h4.8c2.6 0 4.2 1.45 4.2 3.65 0 1.6-.9 2.8-2.4 3.25L20 21.2h-2.4l-3.6-3.7h-2.2v3.7H9.8zm2.1-5.7h2.5c1.4 0 2.2-.75 2.2-1.85s-.8-1.85-2.2-1.85h-2.5v3.7z"
+                fill="#ffffff"
               />
             </svg>
           </div>
-          <span class="product">Unreal Editor</span>
           <nav class="menubar" aria-label="Editor menu">
             <button type="button" data-menu="file">File</button>
             <button type="button" data-menu="edit">Edit</button>
@@ -38,197 +38,473 @@
             <button type="button" data-menu="build">Build</button>
             <button type="button" data-menu="help">Help</button>
           </nav>
+          <div class="level-tabs" role="tablist" id="mainDocTabs">
+            <div class="level-tab active" data-tab="level" role="tab" aria-selected="true" title="PersistentLevel.umap">
+              <span class="tab-type-ico map">🗺️</span>
+              <span class="tab-name">PersistentLevel*</span>
+              <span class="tab-close" data-close="level" title="Close Level">×</span>
+            </div>
+            <div class="level-tab" data-tab="experience" role="tab" aria-selected="false" title="BP_Experience (Blueprint Class)">
+              <span class="tab-type-ico bp">BP</span>
+              <span class="tab-name">BP_Experience</span>
+              <span class="tab-close" data-close="experience" title="Close Tab">×</span>
+            </div>
+            <div class="level-tab" data-tab="itchio" role="tab" aria-selected="false" title="BP_ItchIo (Prakash Itch.io)">
+              <span class="tab-type-ico bp">BP</span>
+              <span class="tab-name">BP_ItchIo</span>
+              <span class="tab-close" data-close="itchio" title="Close Tab">×</span>
+            </div>
+            <div class="level-tab" data-tab="youtube" role="tab" aria-selected="false" title="BP_YouTube (Prakash YouTube)">
+              <span class="tab-type-ico bp">BP</span>
+              <span class="tab-name">BP_YouTube</span>
+              <span class="tab-close" data-close="youtube" title="Close Tab">×</span>
+            </div>
+          </div>
         </div>
-        <div class="titlebar-center">PrakashVaru - Unreal Editor</div>
+        <div class="titlebar-center">
+          <span class="proj-name">PrakashVaru</span>
+          <span class="proj-sep">-</span>
+          <span class="proj-meta">Unreal Editor (DirectX 12 / SM6)</span>
+        </div>
         <div class="win-controls" aria-hidden="true">
-          <span class="win min"></span>
-          <span class="win max"></span>
-          <span class="win close"></span>
+          <span class="win min" title="Minimize"></span>
+          <span class="win max" title="Maximize"></span>
+          <span class="win close" title="Close"></span>
         </div>
       </header>
 
+      <!-- UE5 Main Toolbar -->
       <div class="toolbar">
-        <button class="tb-icon" title="Save Current" aria-label="Save">
+        <div class="mode-dropdown" id="modeSelector" title="Active Editor Mode">
+          <button class="mode-dd-btn" id="modeDdBtn">
+            <span class="mode-icon-glyph"></span>
+            <span id="currentModeLabel">Selection Mode</span>
+            <i class="chevron">▾</i>
+          </button>
+        </div>
+        <span class="tb-sep"></span>
+        <button class="tb-icon" id="saveLevelBtn" title="Save Current Level (Ctrl+S)" aria-label="Save">
           <svg viewBox="0 0 16 16"><path d="M2 2h9l3 3v9H2V2zm2 0v5h7V2H4zm0 7v5h8V9H4z" /></svg>
         </button>
-        <button class="tb-add" title="Add">
+        <button class="tb-btn-add" id="quickAddBtn" title="Quickly add to the project">
           <svg viewBox="0 0 16 16"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
           Add
-          <i></i>
+          <i class="chevron">▾</i>
         </button>
         <span class="tb-sep"></span>
-        <div class="tool-group" role="toolbar" aria-label="Transform">
-          <button class="tool-btn" data-mode="select" title="Select Objects (Q)">
+        <div class="tool-group" role="toolbar" aria-label="Transform Tools">
+          <button class="tool-btn active" data-mode="select" title="Select Objects (Q)" aria-pressed="true">
             <svg viewBox="0 0 16 16"><path d="M3 1.5 12 8.2l-3.4.5 1.9 5.6-2 .6L8.5 9.2 3 12.4V1.5z" /></svg>
           </button>
-          <button class="tool-btn" data-mode="move" title="Translate (W)">
+          <button class="tool-btn" data-mode="move" title="Translate (W)" aria-pressed="false">
             <svg viewBox="0 0 16 16"><path d="M8 1 10.4 3.4H9.1v3.4h3.5V5.6L15 8l-2.4 2.4V9.2H9.1v3.4h1.3L8 15l-2.4-2.4h1.3V9.2H3.4v1.2L1 8l2.4-2.4v1.2h3.5V3.4H5.6L8 1z" /></svg>
           </button>
-          <button class="tool-btn" data-mode="rotate" title="Rotate (E)">
+          <button class="tool-btn" data-mode="rotate" title="Rotate (E)" aria-pressed="false">
             <svg viewBox="0 0 16 16"><path d="M13.4 8A5.4 5.4 0 1 1 8 2.6V1l4.2 3.2L8 7.4V5.2a3.8 3.8 0 1 0 3.8 2.8h1.6z" /></svg>
           </button>
-          <button class="tool-btn" data-mode="scale" title="Scale (R)">
+          <button class="tool-btn" data-mode="scale" title="Scale (R)" aria-pressed="false">
             <svg viewBox="0 0 16 16"><path d="M2 2h5.2v1.5H4.6L8 7 6.9 8.1 3.5 4.7v2.6H2V2zm12 12H8.8v-1.5h2.6L8 9l1.1-1.1 3.4 3.4V8.7H14V14z" /></svg>
           </button>
         </div>
-        <button class="coord-btn" id="coordBtn" title="World / Local">World</button>
+        <button class="coord-btn" id="coordBtn" title="Toggle Coordinate System (Ctrl+`)">World</button>
         <span class="tb-sep"></span>
-        <div class="play-group">
-          <button id="playBtn" class="play-btn" title="Play this level in the active viewport (Alt+P)">
-            <svg viewBox="0 0 16 16"><path d="M3.5 2.2v11.6L14 8 3.5 2.2z" /></svg>
-          </button>
-          <button id="pauseBtn" class="icon-btn" title="Pause" disabled>
-            <svg viewBox="0 0 16 16"><rect x="3" y="2.5" width="3.6" height="11"/><rect x="9.4" y="2.5" width="3.6" height="11"/></svg>
-          </button>
-          <button id="stopBtn" class="icon-btn" title="Stop" disabled>
-            <svg viewBox="0 0 16 16"><rect x="3.2" y="3.2" width="9.6" height="9.6"/></svg>
-          </button>
-          <button class="eject-btn" title="Eject">Eject</button>
+        <div class="snap-group">
+          <label class="snap-pill active" title="Grid Snapping: 10 units"><input type="checkbox" id="snapGridCheck" checked /> <span>10</span></label>
+          <label class="snap-pill active" title="Rotation Snapping: 10 degrees"><input type="checkbox" id="snapRotCheck" checked /> <span>10°</span></label>
+          <label class="snap-pill" title="Scale Snapping"><input type="checkbox" id="snapScaleCheck" /> <span>1</span></label>
         </div>
         <span class="tb-sep"></span>
-        <label class="snap"><input type="checkbox" checked /> Grid 10</label>
-        <label class="snap"><input type="checkbox" checked /> Rot 10°</label>
-        <label class="snap"><input type="checkbox" /> Scale</label>
+        <!-- UE5 Play in Editor cluster -->
+        <div class="play-cluster">
+          <button id="playBtn" class="ue5-play-btn" title="Play this level in active viewport (Alt+P)">
+            <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.5 2.2v11.6L14 8 3.5 2.2z" /></svg>
+            <span>Play</span>
+          </button>
+          <button id="pauseBtn" class="ue5-icon-btn" title="Pause simulation" disabled>
+            <svg viewBox="0 0 16 16"><rect x="3" y="2.5" width="3.6" height="11" rx="0.5"/><rect x="9.4" y="2.5" width="3.6" height="11" rx="0.5"/></svg>
+          </button>
+          <button id="stopBtn" class="ue5-icon-btn" title="Stop simulation (Esc)" disabled>
+            <svg viewBox="0 0 16 16"><rect x="3.2" y="3.2" width="9.6" height="9.6" rx="1"/></svg>
+          </button>
+        </div>
         <span class="tb-sep"></span>
-        <div class="platform">Windows</div>
+        <button class="ue-menu-btn" title="Platforms menu">
+          <span>Platforms</span>
+          <i class="chevron">▾</i>
+        </button>
+        <button class="ue-menu-btn" id="settingsBtn" title="Project and Editor Settings">
+          <span>Settings</span>
+          <i class="chevron">▾</i>
+        </button>
         <div class="tb-grow"></div>
-        <label class="quick-open">
-          <input id="quickOpen" type="search" placeholder="Ctrl+P  Open asset..." />
+        <label class="quick-open" title="Open Asset across project (Ctrl+P)">
+          <svg viewBox="0 0 16 16" width="12" height="12" class="search-ico"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+          <input id="quickOpen" type="search" placeholder="Ctrl+P  Open Asset..." />
         </label>
-        <div class="compile">
+        <div class="live-coding" id="liveCodingBadge" title="Live Coding status: Active">
           <span class="dot live"></span>
-          Compile
+          <span>Compile</span>
         </div>
       </div>
 
+      <!-- Main Workspace -->
       <div class="main">
+        <!-- Modes bar -->
         <aside class="modes" aria-label="Editor modes">
-          <button class="mode active" title="Select" data-mode="select">Sel</button>
-          <button class="mode" title="Place" data-mode="place">Plc</button>
-          <button class="mode" title="Paint" data-mode="paint">Pnt</button>
-          <button class="mode" title="Landscape" data-mode="land">Lnd</button>
-          <button class="mode" title="Foliage" data-mode="fol">Fol</button>
-          <button class="mode" title="Modeling" data-mode="mod">Mod</button>
+          <button class="mode active" title="Select (1)" data-mode="select">
+            <i class="m-icon sel"></i>
+            <span>Sel</span>
+          </button>
+          <button class="mode" title="Landscape (2)" data-mode="land">
+            <i class="m-icon lnd"></i>
+            <span>Lnd</span>
+          </button>
+          <button class="mode" title="Foliage (3)" data-mode="fol">
+            <i class="m-icon fol"></i>
+            <span>Fol</span>
+          </button>
+          <button class="mode" title="Mesh Paint (4)" data-mode="paint">
+            <i class="m-icon pnt"></i>
+            <span>Pnt</span>
+          </button>
+          <button class="mode" title="Modeling (5)" data-mode="mod">
+            <i class="m-icon mod"></i>
+            <span>Mod</span>
+          </button>
+          <button class="mode" title="Fracture (6)" data-mode="frac">
+            <i class="m-icon frc"></i>
+            <span>Frc</span>
+          </button>
         </aside>
 
+        <!-- Workspace Panels Grid -->
         <div class="workspace">
+          <!-- Outliner Panel -->
           <aside class="panel outliner" id="outliner">
             <div class="panel-tabs">
-              <button class="tab active">World Outliner</button>
-              <button class="tab" data-goto="contact">Layers</button>
+              <div class="tab active" role="tab">
+                <span class="tab-accent"></span>
+                <span>Outliner</span>
+              </div>
+              <div class="tab-filler"></div>
+              <button class="tab-opt" title="Outliner Options">⋮</button>
             </div>
             <div class="panel-toolbar">
-              <input id="outlinerFilter" type="search" placeholder="Search..." />
+              <div class="search-box">
+                <svg viewBox="0 0 16 16" width="11" height="11"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                <input id="outlinerFilter" type="search" placeholder="Search..." />
+              </div>
               <span class="count" id="actorCount">0 Actors</span>
             </div>
             <div class="outliner-head">
-              <span>Label</span>
-              <span>Type</span>
+              <span class="col-eye" title="Item Visibility">👁</span>
+              <span class="col-label">Item Label</span>
+              <span class="col-type">Type</span>
             </div>
-            <div class="outliner-tree" id="outlinerTree"></div>
+            <div class="outliner-tree" id="outlinerTree" role="tree"></div>
           </aside>
 
+          <!-- Center 3D Viewport -->
           <section class="viewport-wrap">
-            <div class="viewport" id="viewport">
+            <div class="viewport" id="viewport" tabindex="0">
+              <!-- Viewport Top Toolbar -->
               <div class="vp-toolbar">
-                <button class="vp-dd active-dd" data-view="perspective">Perspective ▾</button>
-                <button class="vp-dd" data-view="lit">Lit ▾</button>
-                <button class="vp-dd" data-view="show">Show ▾</button>
-                <button class="vp-dd" data-view="unlit">Unlit</button>
-                <button class="vp-dd" data-view="wireframe">Wireframe</button>
+                <button class="vp-dd" id="vpCamDd" data-view="perspective">Perspective ▾</button>
+                <button class="vp-dd active-mode" id="vpLitDd" data-view="lit">Lit ▾</button>
+                <button class="vp-dd" id="vpShowDd" data-view="show">Show ▾</button>
+                <button class="vp-dd" id="vpWireDd" data-view="wireframe">Wireframe</button>
+                <button class="vp-btn-toggle" id="vpGameViewBtn" title="Game View (G)">
+                  <span>G</span>
+                </button>
+                <div class="cam-speed-box" title="Camera Speed (Scroll / Slider)">
+                  <svg viewBox="0 0 16 16" width="11" height="11"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
+                  <span id="camSpeedVal">Speed: 4</span>
+                </div>
                 <span class="vp-real">Realtime</span>
               </div>
-              <div class="horizon"></div>
-              <div class="grid-floor"></div>
+
+              <!-- 3D Environment Rendering -->
+              <div class="vp-sky"></div>
+              <div class="vp-sun"></div>
+              <div class="vp-fog"></div>
+              <div class="grid-floor" id="gridFloor"></div>
+
+              <!-- 3D Actor Rig & Selection Bounds -->
               <div class="actor-rig" id="actorRig">
-                <div class="actor-cube">
-                  <div class="face f"></div>
-                  <div class="face b"></div>
-                  <div class="face l"></div>
-                  <div class="face r"></div>
-                  <div class="face t"></div>
-                  <div class="face bo"></div>
+                <div class="actor-cube" id="actorCube">
+                  <div class="face f"><span>BP</span></div>
+                  <div class="face b"><span>UE5</span></div>
+                  <div class="face l"><span>C++</span></div>
+                  <div class="face r"><span>DEV</span></div>
+                  <div class="face t"><span>▲</span></div>
+                  <div class="face bo"><span>▼</span></div>
+                  <div class="selection-bracket tl"></div>
+                  <div class="selection-bracket tr"></div>
+                  <div class="selection-bracket bl"></div>
+                  <div class="selection-bracket br"></div>
                 </div>
-                <div class="gizmo" aria-hidden="true">
-                  <div class="axis x"><span>X</span></div>
-                  <div class="axis y"><span>Y</span></div>
-                  <div class="axis z"><span>Z</span></div>
-                  <div class="gizmo-core"></div>
+
+                <!-- Unreal 3D Transform Gizmo -->
+                <div class="gizmo" id="viewportGizmo" aria-hidden="true">
+                  <!-- Translation Gizmo -->
+                  <div class="gizmo-mode gizmo-translate" id="gizmoTranslate">
+                    <div class="axis x" title="X Axis">
+                      <div class="axis-line"></div>
+                      <div class="cone"></div>
+                      <span>X</span>
+                    </div>
+                    <div class="axis y" title="Y Axis">
+                      <div class="axis-line"></div>
+                      <div class="cone"></div>
+                      <span>Y</span>
+                    </div>
+                    <div class="axis z" title="Z Axis">
+                      <div class="axis-line"></div>
+                      <div class="cone"></div>
+                      <span>Z</span>
+                    </div>
+                    <div class="plane xy"></div>
+                    <div class="plane xz"></div>
+                    <div class="plane yz"></div>
+                    <div class="gizmo-core"></div>
+                  </div>
+                  <!-- Rotation Gizmo -->
+                  <div class="gizmo-mode gizmo-rotate hidden" id="gizmoRotate">
+                    <div class="ring rx"></div>
+                    <div class="ring ry"></div>
+                    <div class="ring rz"></div>
+                  </div>
+                  <!-- Scale Gizmo -->
+                  <div class="gizmo-mode gizmo-scale hidden" id="gizmoScale">
+                    <div class="axis-scale x"><div class="axis-line"></div><div class="box"></div></div>
+                    <div class="axis-scale y"><div class="axis-line"></div><div class="box"></div></div>
+                    <div class="axis-scale z"><div class="axis-line"></div><div class="box"></div></div>
+                  </div>
                 </div>
+
                 <div class="actor-label" id="actorLabel">BP_PrakashVaru</div>
               </div>
-              <div class="viewport-stats">
-                <div>FPS: <b id="fpsVal">120</b></div>
-                <div>MS: <b id="msVal">8.3</b></div>
-                <div>Tris: <b>48.2k</b></div>
-                <div>Draws: <b>86</b></div>
+
+              <!-- Viewport Stats HUD -->
+              <div class="viewport-stats" id="viewportStats">
+                <div class="stat-line">FPS: <b id="fpsVal">120.0</b></div>
+                <div class="stat-line">Frame: <b id="msVal">8.33</b> ms</div>
+                <div class="stat-line">Lumen: <span class="badge-ok">Enabled</span></div>
+                <div class="stat-line">Nanite: <b>48.2k tris</b></div>
+                <div class="stat-line">Mem: <b>2.18 GB</b></div>
               </div>
+
+              <!-- Viewport Coordinate Compass -->
               <div class="vp-axis-widget" aria-hidden="true">
                 <i class="ax x"></i><i class="ax y"></i><i class="ax z"></i>
+                <span class="lbl x">X</span><span class="lbl y">Y</span><span class="lbl z">Z</span>
               </div>
+
+              <!-- Viewport HUD Overlay -->
               <div class="viewport-hud" id="viewportHud"></div>
-              <div class="cam-speed">Camera Speed 4</div>
-              <div class="pie-banner hidden" id="pieBanner">PLAYING IN EDITOR  —  Shift+F1 mouse  ·  Esc stop</div>
+
+              <!-- PIE Banner -->
+              <div class="pie-banner hidden" id="pieBanner">
+                <span class="pie-dot"></span>
+                <span>PLAYING IN EDITOR (PIE) &nbsp;—&nbsp; Shift+F1 Mouse Cursor &nbsp;·&nbsp; Esc to Stop</span>
+              </div>
+
+              <!-- Viewport controls hint -->
+              <div class="vp-hint">Drag: Orbit · Wheel: Zoom · F: Focus · G: Game View</div>
+            </div>
+
+            <!-- Unreal Blueprint Editor View -->
+            <div class="blueprint-editor hidden" id="blueprintEditor">
+              <div class="bp-toolbar">
+                <div class="bp-tb-cluster">
+                  <button class="bp-tb-btn compile-btn" id="bpCompileBtn" title="Compile Blueprint (F7)">
+                    <span class="bp-check">✓</span>
+                    <span>Compile</span>
+                  </button>
+                  <button class="bp-tb-btn" id="bpSaveBtn" title="Save Blueprint (Ctrl+S)">
+                    <svg viewBox="0 0 16 16" width="12" height="12"><path d="M2 2h9l3 3v9H2V2zm2 0v5h7V2H4zm0 7v5h8V9H4z"/></svg>
+                    <span>Save</span>
+                  </button>
+                  <button class="bp-tb-btn" id="bpBrowseBtn" title="Browse to Asset in Content Browser">
+                    <span>Browse</span>
+                  </button>
+                </div>
+                <span class="tb-sep"></span>
+                <div class="bp-tb-cluster">
+                  <button class="bp-tb-btn active-tool" id="bpGraphTabBtn" title="Event Graph">Event Graph</button>
+                  <button class="bp-tb-btn" id="bpDefaultsBtn" title="Class Defaults">Class Defaults</button>
+                  <button class="bp-tb-btn" id="bpSettingsBtn" title="Class Settings">Class Settings</button>
+                </div>
+                <div class="tb-grow"></div>
+                <div class="bp-breadcrumb">
+                  <span class="bp-crumb-root" id="bpCrumbRoot">BP_Experience</span>
+                  <span class="bp-crumb-sep">▸</span>
+                  <span class="bp-crumb-sub" id="bpCrumbSub">EventGraph</span>
+                </div>
+              </div>
+
+              <!-- Blueprint Graph Canvas -->
+              <div class="bp-canvas-wrap" id="bpCanvasWrap">
+                <div class="bp-watermark" id="bpWatermark">EVENT GRAPH</div>
+                <svg class="bp-wires-svg" id="bpWiresSvg"></svg>
+                <div class="bp-nodes-container" id="bpNodesContainer"></div>
+              </div>
             </div>
           </section>
 
+          <!-- Details Panel -->
           <aside class="panel details" id="details">
             <div class="panel-tabs">
-              <button class="tab active">Details</button>
-              <button class="tab" id="worldSettingsTab">World Settings</button>
+              <div class="tab active" role="tab">
+                <span class="tab-accent"></span>
+                <span>Details</span>
+              </div>
+              <div class="tab" id="worldSettingsTab" role="tab">
+                <span>World Settings</span>
+              </div>
+              <div class="tab-filler"></div>
+              <button class="tab-opt" title="Details Options">⋮</button>
             </div>
+
+            <!-- Component Hierarchy Tree (UE5 Details top) -->
+            <div class="component-panel">
+              <div class="comp-head">
+                <button class="btn-add-comp" id="addCompBtn">
+                  <span class="plus">+</span> Add Component
+                </button>
+              </div>
+              <div class="component-tree" id="componentTree"></div>
+            </div>
+
             <div class="details-search">
-              <input type="search" placeholder="Search Details" />
+              <div class="search-box">
+                <svg viewBox="0 0 16 16" width="11" height="11"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                <input type="search" id="detailsSearch" placeholder="Search Details" />
+              </div>
             </div>
+
             <div class="details-body" id="detailsBody"></div>
           </aside>
         </div>
       </div>
 
-      <section class="dock">
+      <!-- Dock / Content Drawer & Output Log -->
+      <section class="dock" id="bottomDock">
         <div class="panel-tabs dock-tabs">
-          <button class="tab active" data-dock="content">Content Browser</button>
-          <button class="tab" data-dock="log">Output Log</button>
+          <button class="tab active" data-dock="content">
+            <span class="tab-accent"></span>
+            <span class="tab-ico-cb"></span>
+            <span>Content Browser</span>
+          </button>
+          <button class="tab" data-dock="log">
+            <span class="tab-accent"></span>
+            <span>Output Log</span>
+          </button>
+          <div class="tab-filler"></div>
+          <button class="dock-minimize-btn" id="dockCloseBtn" title="Hide Drawer (Ctrl+Space)">▾</button>
         </div>
+
         <div class="dock-content" id="dockContent">
           <div class="cb-toolbar">
-            <button class="cb-btn">+ Add</button>
+            <button class="cb-btn primary">+ Add</button>
             <button class="cb-btn">Import</button>
             <button class="cb-btn">Save All</button>
-            <span class="path">/All/Game</span>
+            <span class="tb-sep"></span>
+            <div class="cb-breadcrumb">
+              <span class="crumb root">Content</span>
+              <span class="crumb-sep">▸</span>
+              <span class="crumb sub" id="crumbPath">All / Game</span>
+            </div>
             <span class="tb-grow"></span>
-            <button class="tab mini" data-filter="all">All</button>
-            <button class="tab mini" data-filter="professional">Professional</button>
-            <button class="tab mini" data-filter="prototype">MadMonk</button>
-            <button class="tab mini" data-filter="system">Systems</button>
+            <div class="filter-pills">
+              <button class="filter-pill active" data-filter="all">All (7)</button>
+              <button class="filter-pill" data-filter="experience">Experience (3)</button>
+              <button class="filter-pill" data-filter="itchio">Itch.io (3)</button>
+              <button class="filter-pill" data-filter="youtube">YouTube (1)</button>
+            </div>
           </div>
           <div class="browser-body">
             <div class="folder-tree">
-              <div class="folder active" data-filter="all">▸ Content</div>
-              <div class="folder nested" data-filter="professional"> ▸ Professional</div>
-              <div class="folder nested" data-filter="prototype"> ▸ MadMonk</div>
-              <div class="folder nested" data-filter="system"> ▸ Systems</div>
-              <div class="folder nested" data-filter="all"> ▸ Developers / PrakashVaru</div>
+              <div class="folder active" data-filter="all">
+                <span class="folder-arrow">▼</span>
+                <span class="f-ico">📁</span>
+                <span>Content</span>
+              </div>
+              <div class="folder nested" data-filter="experience">
+                <span class="folder-arrow">▶</span>
+                <span class="f-ico">📁</span>
+                <span>Experience</span>
+              </div>
+              <div class="folder nested" data-filter="itchio">
+                <span class="folder-arrow">▶</span>
+                <span class="f-ico">📁</span>
+                <span>Itch.io</span>
+              </div>
+              <div class="folder nested" data-filter="youtube">
+                <span class="folder-arrow">▶</span>
+                <span class="f-ico">📁</span>
+                <span>YouTube</span>
+              </div>
+              <div class="folder nested" data-filter="all">
+                <span class="folder-arrow">▶</span>
+                <span class="f-ico">📁</span>
+                <span>Developers / PrakashVaru</span>
+              </div>
             </div>
             <div class="asset-grid" id="assetGrid"></div>
           </div>
         </div>
-        <pre class="output-log hidden" id="fullLog"></pre>
+
+        <div class="full-log-wrap hidden" id="fullLogWrap">
+          <div class="log-toolbar">
+            <button class="log-filter-btn active" data-lvl="all">All</button>
+            <button class="log-filter-btn" data-lvl="temp">LogTemp</button>
+            <button class="log-filter-btn" data-lvl="bp">LogBlueprint</button>
+            <button class="log-filter-btn" data-lvl="live">LogLiveCoding</button>
+            <button class="log-btn-clear" id="clearLogBtn">Clear Log</button>
+          </div>
+          <pre class="output-log" id="fullLog"></pre>
+        </div>
       </section>
 
+      <!-- UE5 Status Bar with Content Drawer Button & Console Input -->
       <footer class="statusbar">
-        <div class="log" id="outputLog"></div>
+        <div class="status-left">
+          <button class="content-drawer-btn" id="contentDrawerBtn" title="Toggle Content Drawer (Ctrl+Space)">
+            <svg viewBox="0 0 16 16" width="12" height="12"><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h3.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 9.62 4H13.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/></svg>
+            <span>Content Drawer</span>
+            <kbd>Ctrl+Space</kbd>
+          </button>
+          <div class="console-box">
+            <span class="cmd-prompt">Cmd</span>
+            <input
+              type="text"
+              id="consoleInput"
+              placeholder="Enter console command (~) (stat fps, viewmode wireframe, help...)"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+        </div>
+
+        <div class="status-middle">
+          <div class="log-preview" id="outputLog">LogStarted: Unreal Editor initialized. PersistentLevel loaded.</div>
+        </div>
+
         <div class="status-right">
-          <span>Source Control: Git</span>
-          <span>Compile: Succeeded</span>
-          <span>Cmd</span>
-          <span id="clock"></span>
+          <span class="st-item"><i class="st-dot ok"></i> Git: main</span>
+          <span class="st-item"><i class="st-dot ok"></i> Live Coding: Ready</span>
+          <span class="st-item">DirectX 12</span>
+          <span class="st-item st-clock" id="clock">--:--:--</span>
         </div>
       </footer>
     </div>
 
+    <!-- Dropdown menu -->
     <div class="dropdown" id="menuDropdown" hidden></div>
+
     <script src="src/data.js"></script>
     <script src="src/main.js"></script>
   </body>
 </html>
+
