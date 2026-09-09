@@ -3,6 +3,7 @@ const state = {
   filter: "all",
   playing: false,
   tool: "select",
+  logs: [],
 };
 
 const $ = (id) => document.getElementById(id);
@@ -22,17 +23,31 @@ function iconClass(node) {
   return "";
 }
 
+function typeLabel(node) {
+  if (node.type === "World") return "World";
+  if (node.type === "Folder") return "Folder";
+  if (node.type === "Character") return "Pawn";
+  if (node.type === "Component") return "Component";
+  return "Actor";
+}
+
 function renderOutliner(query = "") {
   const tree = $("outlinerTree");
   const q = query.trim().toLowerCase();
-  const rows = flattenTree(outliner).filter((n) => !q || n.label.toLowerCase().includes(q));
+  const all = flattenTree(outliner);
+  const rows = all.filter((n) => !q || n.label.toLowerCase().includes(q));
+  const actors = all.filter((n) => n.type !== "Folder" && n.type !== "World").length;
+  $("actorCount").textContent = `${actors} Actors`;
   tree.innerHTML = rows
     .map(
       (n) => `
       <button class="tree-row ${n.id === state.selected ? "selected" : ""}" data-id="${n.id}" style="--d:${n.depth}">
-        <span class="caret">${n.children ? "▾" : ""}</span>
-        <span class="tree-icon ${iconClass(n)}"></span>
-        <span>${n.label}</span>
+        <span class="tree-main">
+          <span class="caret">${n.children ? "▾" : ""}</span>
+          <span class="tree-icon ${iconClass(n)}"></span>
+          <span>${n.label}</span>
+        </span>
+        <span class="tree-type">${typeLabel(n)}</span>
       </button>`
     )
     .join("");
@@ -62,42 +77,25 @@ function renderDetails(id) {
       <h2>${d.title}</h2>
     </div>
     <div class="cat-bar">▸ ${d.category}</div>
-    ${d.properties
-      .map(
-        ([k, v]) => `<div class="prop-row"><span>${k}</span><span>${v}</span></div>`
-      )
-      .join("")}
+    ${d.properties.map(([k, v]) => `<div class="prop-row"><span>${k}</span><span>${v}</span></div>`).join("")}
     <div class="details-copy">${d.body}</div>
     ${skillBlock}
     ${
       d.cta
         ? `<div class="details-cta">${d.cta
-            .map((c) => `<a class="ue-btn ${c.label.includes("Email") || c.label.includes("LinkedIn") ? "primary" : ""}" href="${c.href}" target="_blank" rel="noreferrer">${c.label}</a>`)
+            .map(
+              (c) =>
+                `<a class="ue-btn ${c.label.includes("Email") || c.label.includes("LinkedIn") ? "primary" : ""}" href="${c.href}" target="_blank" rel="noreferrer">${c.label}</a>`
+            )
             .join("")}</div>`
         : ""
     }
   `;
 }
 
-function renderHud(id) {
+function renderActor(id) {
   const d = getDetail(id);
-  const isHero = id === "hero" || id === "world";
-  $("viewportHud").innerHTML = `
-    <div class="hero-card">
-      <div class="role">${isHero ? profile.role : d.category + "  ·  Selected"}</div>
-      <h1>${isHero ? profile.name : d.title}</h1>
-      <p>${d.body}</p>
-      <div class="hud-actions">
-        ${(d.cta || [{ label: "Inspect Details", href: "#details" }])
-          .slice(0, 3)
-          .map(
-            (c, i) =>
-              `<a class="ue-btn ${i === 0 ? "primary" : ""}" href="${c.href}" ${c.href.startsWith("http") || c.href.startsWith("mailto") || c.href.startsWith("tel") ? 'target="_blank" rel="noreferrer"' : ""}>${c.label}</a>`
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
+  $("actorLabel").textContent = d.title.length > 28 ? d.title.slice(0, 26) + "…" : d.title;
 }
 
 function renderAssets() {
@@ -107,7 +105,7 @@ function renderAssets() {
     .map(
       (p) => `
       <button class="asset ${state.selected === p.id ? "selected" : ""}" data-id="${p.id}">
-        <div class="asset-thumb" style="background-color:${p.color}22;border-bottom:3px solid ${p.color}">
+        <div class="asset-thumb" style="--tint:${p.color}; background-color:${p.color}22">
           <span>${p.asset}</span>
         </div>
         <div class="asset-meta">
@@ -121,22 +119,24 @@ function renderAssets() {
 
 function log(msg) {
   const t = new Date().toLocaleTimeString();
-  $("outputLog").textContent = `Log: ${t}  LogTemp: ${msg}`;
+  const line = `LogTemp: ${t}  ${msg}`;
+  state.logs.push(line);
+  $("outputLog").textContent = line;
+  $("fullLog").textContent = state.logs.join("\n");
 }
 
 function select(id, source = "outliner") {
   state.selected = id;
   renderOutliner($("outlinerFilter").value);
   renderDetails(id);
-  renderHud(id);
+  renderActor(id);
   renderAssets();
-  const d = getDetail(id);
-  log(`Selected ${d.title} via ${source}`);
+  log(`Selected ${getDetail(id).title} (${source})`);
 }
 
 function renderMenu(key, anchor) {
   const dropdown = $("menuDropdown");
-  const items = menus[key];
+  const items = menus[key] || [];
   dropdown.innerHTML = items
     .map((item) => {
       if (item.divider) return `<div class="sep"></div>`;
@@ -163,7 +163,7 @@ function setPlaying(on) {
   $("stopBtn").disabled = !on;
   $("pieBanner").classList.toggle("hidden", !on);
   $("viewport").classList.toggle("playing", on);
-  log(on ? "Play In Editor started" : "PIE session ended");
+  log(on ? "Play In Editor started (PIE)" : "PIE session ended");
 }
 
 function tickClock() {
@@ -184,7 +184,7 @@ function init() {
   tickClock();
   setInterval(tickClock, 1000);
   setInterval(tickStats, 700);
-  log("Editor initialized. Persistent Level loaded.");
+  log("LogStarted: Unreal Editor initialized. Map '/Game/Portfolio/Persistent' loaded.");
 
   $("outlinerTree").addEventListener("click", (e) => {
     const row = e.target.closest("[data-id]");
@@ -198,15 +198,22 @@ function init() {
     if (card) select(card.dataset.id, "content browser");
   });
 
-  document.querySelectorAll(".folder, .content-browser .tab[data-filter]").forEach((el) => {
+  document.querySelectorAll(".folder, .cb-toolbar .tab[data-filter]").forEach((el) => {
     el.addEventListener("click", () => {
       state.filter = el.dataset.filter || "all";
       document.querySelectorAll(".folder").forEach((f) => f.classList.toggle("active", f.dataset.filter === state.filter));
-      document.querySelectorAll(".content-browser .tab[data-filter]").forEach((t) =>
+      document.querySelectorAll(".cb-toolbar .tab[data-filter]").forEach((t) =>
         t.classList.toggle("active", t.dataset.filter === state.filter)
       );
+      const path = {
+        all: "/All/Game",
+        professional: "/All/Game/Professional",
+        prototype: "/All/Game/MadMonk",
+        system: "/All/Game/Systems",
+      };
+      document.querySelector(".path").textContent = path[state.filter] || "/All/Game";
       renderAssets();
-      log(`Content Browser filter: ${state.filter}`);
+      log(`Content Browser: ${document.querySelector(".path").textContent}`);
     });
   });
 
@@ -214,20 +221,45 @@ function init() {
     btn.addEventListener("click", () => {
       state.tool = btn.dataset.mode;
       document.querySelectorAll(".tool-btn").forEach((b) => b.classList.toggle("active", b === btn));
-      log(`Transform mode: ${state.tool}`);
+      log(`Editor mode: ${state.tool}`);
     });
   });
   document.querySelector('.tool-btn[data-mode="select"]').classList.add("active");
 
-  document.querySelectorAll(".viewport-tabs .tab[data-view]").forEach((tab) => {
+  document.querySelectorAll(".mode").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("active", b === btn));
+      log(`Placement mode: ${btn.dataset.mode}`);
+    });
+  });
+
+  document.querySelectorAll(".vp-dd[data-view]").forEach((tab) => {
     tab.addEventListener("click", () => {
-      document.querySelectorAll(".viewport-tabs .tab[data-view]").forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
+      const view = tab.dataset.view;
+      if (view === "show") {
+        log("Show flags: Grid, Selection, Volumes");
+        return;
+      }
       $("viewport").classList.remove("unlit", "wireframe");
-      if (tab.dataset.view === "unlit") $("viewport").classList.add("unlit");
-      if (tab.dataset.view === "wireframe") $("viewport").classList.add("wireframe");
-      $("viewMeta").textContent = `Persp. 90°  |  ${tab.textContent}  |  Real-Time`;
-      log(`Viewport mode: ${tab.dataset.view}`);
+      if (view === "unlit") $("viewport").classList.add("unlit");
+      if (view === "wireframe") $("viewport").classList.add("wireframe");
+      document.querySelectorAll(".vp-dd[data-view]").forEach((t) => t.classList.toggle("on", t === tab));
+      log(`Viewport: ${tab.textContent.replace("▾", "").trim()}`);
+    });
+  });
+
+  $("coordBtn").addEventListener("click", () => {
+    $("coordBtn").textContent = $("coordBtn").textContent === "World" ? "Local" : "World";
+    log(`Coordinate system: ${$("coordBtn").textContent}`);
+  });
+
+  document.querySelectorAll(".dock-tabs .tab[data-dock]").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".dock-tabs .tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      const content = tab.dataset.dock === "content";
+      $("dockContent").classList.toggle("hidden", !content);
+      $("fullLog").classList.toggle("hidden", content);
     });
   });
 
@@ -249,13 +281,10 @@ function init() {
   $("quickOpen").addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
     const q = e.target.value.toLowerCase();
-    const all = [
-      ...flattenTree(outliner),
-      ...projects.map((p) => ({ id: p.id, label: p.title })),
-    ];
+    const all = [...flattenTree(outliner), ...projects.map((p) => ({ id: p.id, label: p.title }))];
     const hit = all.find((n) => n.label.toLowerCase().includes(q));
     if (hit) {
-      select(hit.id, "quick open");
+      select(hit.id, "open asset");
       e.target.value = "";
     }
   });
@@ -272,17 +301,16 @@ function init() {
     const action = e.target.dataset?.action;
     if (!action) return;
     if (action === "play") setPlaying(true);
-    else if (action === "compile") log("Live Coding: compile succeeded (0 errors, 0 warnings)");
-    else if (action === "browser") document.querySelector(".content-browser").scrollIntoView({ behavior: "smooth" });
+    else if (action === "compile") log("Live Coding compile succeeded (0 errors, 0 warnings)");
+    else if (action === "browser") document.querySelector('[data-dock="content"]').click();
     else if (action === "focus-outliner") $("outlinerFilter").focus();
     else if (action === "focus-details") $("details").scrollIntoView({ behavior: "smooth" });
-    else if (action === "noop") log("Exit ignored — this session stays in editor");
+    else if (action === "noop") log("Exit ignored");
     else select(action, "menu");
     closeMenu();
   });
 
   document.addEventListener("click", () => closeMenu());
-
   $("worldSettingsTab").addEventListener("click", () => select("world", "world settings"));
   document.querySelector('[data-goto="contact"]')?.addEventListener("click", () => select("contact"));
 }
