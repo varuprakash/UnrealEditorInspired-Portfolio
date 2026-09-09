@@ -520,3 +520,16 @@ const menus = {
   ],
 };
 
+if (typeof window !== "undefined") {
+  window.profile = profile;
+  window.outliner = outliner;
+  window.defaultTransform = defaultTransform;
+  window.components = components;
+  window.details = details;
+  window.skills = skills;
+  window.projects = projects;
+  window.menus = menus;
+}
+
+export { profile, outliner, defaultTransform, components, details, skills, projects, menus };
+

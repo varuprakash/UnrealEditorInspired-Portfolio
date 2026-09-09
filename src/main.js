@@ -1,3 +1,5 @@
+import "./data.js";
+
 const state = {
   selected: "hero",
   filter: "all",
