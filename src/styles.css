@@ -90,7 +90,7 @@ svg {
 .editor {
   height: 100vh;
   display: grid;
-  grid-template-rows: 28px 34px minmax(0, 1fr) 220px 22px;
+  grid-template-rows: 34px 34px minmax(0, 1fr) 220px 22px;
   background: var(--ue-bg);
   overflow: hidden;
   position: relative;
@@ -106,8 +106,8 @@ svg {
   background: #141414;
   border-bottom: 1px solid var(--ue-line);
   padding: 0 0 0 6px;
-  height: 28px;
-  font-size: 11px;
+  height: 34px;
+  font-size: 11.5px;
 }
 
 .titlebar-left {
@@ -149,38 +149,41 @@ svg {
   display: flex;
   align-items: flex-end;
   height: 100%;
-  margin-left: 12px;
-  border-left: 1px solid #222;
-  padding-left: 4px;
-  gap: 2px;
+  margin-left: 14px;
+  border-left: 1px solid #282828;
+  padding-left: 6px;
+  gap: 4px;
 }
 
 .level-tab {
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 25px;
-  padding: 0 8px;
-  background: #1c1c1c;
-  border: 1px solid #2e2e2e;
+  gap: 7px;
+  height: 30px;
+  padding: 0 13px;
+  background: #18191d;
+  border: 1px solid #2c2f36;
   border-bottom: 0;
   border-radius: 4px 4px 0 0;
-  color: #a0a0a0;
-  font-size: 11px;
+  color: #94a3b8;
+  font-size: 11.5px;
+  font-weight: 500;
   position: relative;
   cursor: pointer;
   transition: all 0.12s ease;
 }
 
 .level-tab:hover {
-  background: #242424;
-  color: #e0e0e0;
+  background: #202328;
+  color: #e2e8f0;
+  border-color: #383c44;
 }
 
 .level-tab.active {
-  background: #262626;
-  border-color: #3e3e3e;
-  color: #fff;
+  background: #25282e;
+  border-color: #424752;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .level-tab.active::after {
@@ -189,48 +192,36 @@ svg {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--ue-accent);
+  border-radius: 3px 3px 0 0;
 }
 
 .tab-type-ico {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
+  font-size: 9.5px;
   font-family: var(--ue-mono);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
+  letter-spacing: 0.5px;
 }
 
 .tab-type-ico.bp {
   background: #0070e0;
   color: #fff;
-  padding: 1px 3px;
-  border-radius: 2px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .tab-type-ico.map {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .level-tab .tab-name {
-  font-weight: 500;
-}
-
-.level-tab .tab-close {
-  color: #777;
-  font-size: 13px;
-  cursor: pointer;
-  line-height: 1;
-  margin-left: 2px;
-  border-radius: 2px;
-  padding: 0 2px;
-}
-
-.level-tab .tab-close:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
+  letter-spacing: 0.2px;
 }
 
 .titlebar-center {
@@ -2377,8 +2368,8 @@ svg {
   left: 0;
   width: 100%;
   height: 100%;
-  min-width: 1400px;
-  min-height: 700px;
+  min-width: 2000px;
+  min-height: 1000px;
   pointer-events: none;
   z-index: 1;
 }
@@ -2386,58 +2377,63 @@ svg {
 .bp-wire {
   fill: none;
   stroke: #ffffff;
-  stroke-width: 2.2;
+  stroke-width: 2.8;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.35));
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.45));
 }
 
 .bp-wire.pulse {
-  stroke-dasharray: 6 4;
+  stroke-dasharray: 7 4;
   animation: wireFlow 1.2s linear infinite;
 }
 
 @keyframes wireFlow {
   to {
-    stroke-dashoffset: -20;
+    stroke-dashoffset: -22;
   }
 }
 
 .bp-nodes-container {
   position: relative;
-  min-width: 1400px;
-  min-height: 700px;
-  padding: 30px;
+  min-width: 2000px;
+  min-height: 1000px;
+  padding: 40px;
   z-index: 2;
 }
 
 /* UE5 Blueprint Node */
 .bp-node {
   position: absolute;
-  background: #1e1e1e;
-  border: 1px solid #363636;
-  border-radius: 6px;
-  min-width: 250px;
-  max-width: 320px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+  background: #1c1e23;
+  border: 1px solid #333842;
+  border-radius: 8px;
+  min-width: 380px;
+  max-width: 440px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
   cursor: pointer;
   transition: transform 0.08s ease, border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
+.bp-node.event-node {
+  min-width: 240px;
+  max-width: 270px;
+}
+
 .bp-node:hover {
-  border-color: #555;
+  border-color: #555e6e;
 }
 
 .bp-node.selected {
   border-color: #e89c2d;
-  box-shadow: 0 0 0 2px #e89c2d, 0 6px 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 0 2.5px #e89c2d, 0 8px 28px rgba(0, 0, 0, 0.85);
 }
 
 .bp-node-header {
-  padding: 6px 10px;
-  border-radius: 5px 5px 0 0;
+  padding: 10px 14px;
+  border-radius: 7px 7px 0 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
@@ -2467,8 +2463,9 @@ svg {
 }
 
 .bp-node-icon {
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1;
+  font-weight: 800;
 }
 
 .bp-node-titles {
@@ -2478,39 +2475,42 @@ svg {
 
 .bp-node-title {
   font-weight: 700;
-  font-size: 11px;
+  font-size: 13.5px;
   letter-spacing: 0.2px;
+  line-height: 1.25;
 }
 
 .bp-node-sub {
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.82);
   font-family: var(--ue-mono);
+  margin-top: 1px;
 }
 
 .bp-node-body {
-  padding: 8px 10px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 11px;
-  color: #ccc;
-  background: #1c1c1c;
-  border-radius: 0 0 5px 5px;
+  gap: 8px;
+  font-size: 12px;
+  color: #ddd;
+  background: #181a1f;
+  border-radius: 0 0 7px 7px;
 }
 
 .bp-pins-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
-  padding: 2px 0;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 3px 0;
 }
 
 .bp-pin {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .bp-pin.out {
@@ -2521,18 +2521,18 @@ svg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1;
 }
 
 .pin-shape.exec {
   color: #fff;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .pin-shape.data {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
 }
 
@@ -2542,42 +2542,44 @@ svg {
 .pin-shape.data.obj    { background: #3b82f6; }
 
 .bp-node-desc {
-  font-size: 10px;
-  color: #aaa;
-  line-height: 1.35;
-  background: #151515;
-  padding: 6px 8px;
-  border-radius: 3px;
-  border-left: 2px solid #3b82f6;
-  margin-top: 2px;
+  font-size: 12.5px;
+  color: #e2e8f0;
+  line-height: 1.55;
+  background: #111317;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border-left: 3px solid #0070e0;
+  margin-top: 4px;
 }
 
 .bp-node-actions {
   display: flex;
-  gap: 4px;
-  margin-top: 4px;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .bp-node-btn {
   flex: 1;
-  height: 22px;
-  background: #272727;
-  border: 1px solid #3a3a3a;
-  border-radius: 2px;
-  color: #ddd;
-  font-size: 10px;
-  font-weight: 500;
+  height: 28px;
+  background: #272a31;
+  border: 1px solid #3d424e;
+  border-radius: 3px;
+  color: #e2e8f0;
+  font-size: 11.5px;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   cursor: pointer;
+  padding: 0 12px;
+  transition: all 0.1s ease;
 }
 
 .bp-node-btn:hover {
-  background: #333;
+  background: #333842;
   color: #fff;
-  border-color: #555;
+  border-color: #555e6e;
 }
 
 .bp-node-btn.primary {

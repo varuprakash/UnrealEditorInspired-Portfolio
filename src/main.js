@@ -516,8 +516,8 @@ const blueprintGraphs = {
         icon: "⚡",
         title: "Event BeginPlay",
         sub: "Career Lifecycle",
-        x: 40,
-        y: 80,
+        x: 50,
+        y: 120,
         inPins: [],
         outPins: [{ name: "Exec", type: "exec" }],
         desc: "Execution begins upon initializing professional game development career.",
@@ -529,8 +529,8 @@ const blueprintGraphs = {
         icon: "f",
         title: "300Minds : Unreal Developer",
         sub: "Digital Twins & Plugins (2025 — 2026)",
-        x: 270,
-        y: 60,
+        x: 370,
+        y: 80,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "Parquet Data", type: "string" },
@@ -551,8 +551,8 @@ const blueprintGraphs = {
         icon: "f",
         title: "WRKS Games : Gameplay Programmer",
         sub: "City Builder Gameplay (2024 — 2025)",
-        x: 640,
-        y: 60,
+        x: 860,
+        y: 80,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "Building Placement", type: "vector" },
@@ -573,8 +573,8 @@ const blueprintGraphs = {
         icon: "f",
         title: "ViitorCloud : Software Engineer",
         sub: "VR Gaming & Simulation (2023 — 2024)",
-        x: 1010,
-        y: 60,
+        x: 1350,
+        y: 80,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "VR Cricket Physics", type: "vector" },
@@ -595,8 +595,8 @@ const blueprintGraphs = {
         icon: "🎓",
         title: "GTU Computer Science",
         sub: "Academic Foundation (8.74 CGPA)",
-        x: 640,
-        y: 380,
+        x: 860,
+        y: 470,
         inPins: [
           { name: "B.E. Computer Science", type: "string" },
           { name: "Algorithms & C++", type: "obj" },
@@ -623,8 +623,8 @@ const blueprintGraphs = {
         icon: "⚡",
         title: "Event BeginPlay",
         sub: "Initialize Storefront",
-        x: 40,
-        y: 90,
+        x: 50,
+        y: 130,
         inPins: [],
         outPins: [{ name: "Exec", type: "exec" }],
         desc: "Loads published games and interactive prototypes.",
@@ -636,8 +636,8 @@ const blueprintGraphs = {
         icon: "🎮",
         title: "Prakash Itch.io",
         sub: "Developer Profile & Storefront",
-        x: 270,
-        y: 60,
+        x: 370,
+        y: 90,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "Publisher", type: "string" },
@@ -657,8 +657,8 @@ const blueprintGraphs = {
         icon: "⚓",
         title: "PacificSail",
         sub: "Radiation-Wave Ocean Survival Game",
-        x: 640,
-        y: 60,
+        x: 860,
+        y: 90,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "Boat Navigation", type: "vector" },
@@ -679,8 +679,8 @@ const blueprintGraphs = {
         icon: "🚗",
         title: "Don'tDrive",
         sub: "Physics Rage Platformer Demo",
-        x: 1010,
-        y: 60,
+        x: 1350,
+        y: 90,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "Chaotic Physics", type: "vector" },
@@ -711,8 +711,8 @@ const blueprintGraphs = {
         icon: "⚡",
         title: "Event OnChannelSelect",
         sub: "Stream Channel Media",
-        x: 50,
-        y: 110,
+        x: 60,
+        y: 140,
         inPins: [],
         outPins: [{ name: "Exec", type: "exec" }],
         desc: "Fires media player trigger for Prakash YouTube channel.",
@@ -724,8 +724,8 @@ const blueprintGraphs = {
         icon: "▶",
         title: "Prakash YouTube",
         sub: "@madmonk4games (Devlogs & Mechanics)",
-        x: 340,
-        y: 80,
+        x: 390,
+        y: 100,
         inPins: [
           { name: "Exec", type: "exec" },
           { name: "Channel Handle", type: "string" },
@@ -756,7 +756,7 @@ function renderBlueprintGraph(tabKey) {
     .map((n) => {
       const isSelected = state.selected === n.assetId;
       return `
-      <div class="bp-node ${isSelected ? "selected" : ""}" id="${n.id}" data-asset="${n.assetId || ""}" style="left:${n.x}px; top:${n.y}px;">
+      <div class="bp-node ${n.type === "event" ? "event-node" : ""} ${isSelected ? "selected" : ""}" id="${n.id}" data-asset="${n.assetId || ""}" style="left:${n.x}px; top:${n.y}px;">
         <div class="bp-node-header ${n.type}">
           <span class="bp-node-icon">${n.icon || "f"}</span>
           <div class="bp-node-titles">
@@ -796,17 +796,17 @@ function renderBlueprintGraph(tabKey) {
     });
   });
 
-  const nodeWidth = 280;
   const wiresHtml = (graph.wires || [])
     .map((w) => {
       const n1 = graph.nodes.find((n) => n.id === w.from);
       const n2 = graph.nodes.find((n) => n.id === w.to);
       if (!n1 || !n2) return "";
-      const x1 = n1.x + (n1.type === "event" ? 220 : nodeWidth);
-      const y1 = n1.y + 36;
+      const nodeWidth = n1.type === "event" ? 260 : 410;
+      const x1 = n1.x + nodeWidth;
+      const y1 = n1.y + 44;
       const x2 = n2.x;
-      const y2 = n2.y + 36;
-      const dx = Math.max(40, (x2 - x1) * 0.5);
+      const y2 = n2.y + 44;
+      const dx = Math.max(50, (x2 - x1) * 0.5);
       return `<path class="bp-wire pulse" d="M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}" />`;
     })
     .join("");
@@ -821,7 +821,6 @@ function switchDocumentTab(tabId) {
     const active = tab.dataset.tab === tabId;
     tab.classList.toggle("active", active);
     tab.setAttribute("aria-selected", active);
-    if (active) tab.classList.remove("hidden");
   });
 
   $("viewport")?.classList.toggle("hidden", !isLevel);
@@ -847,17 +846,6 @@ function switchDocumentTab(tabId) {
     }[tabId];
     if (tabFirstAsset) {
       select(tabFirstAsset, "Tab Select");
-    }
-  }
-}
-
-function closeDocumentTab(tabKey) {
-  const tabEl = document.querySelector(`#mainDocTabs .level-tab[data-tab="${tabKey}"]`);
-  if (tabEl && tabKey !== "level") {
-    tabEl.classList.add("hidden");
-    log(`Closed tab: ${tabEl.querySelector(".tab-name")?.textContent || tabKey}`, "LogTemp");
-    if (state.activeTab === tabKey) {
-      switchDocumentTab("level");
     }
   }
 }
@@ -897,14 +885,6 @@ function init() {
 
   // Document Tabs (PersistentLevel / BP_Experience / BP_ItchIo / BP_YouTube)
   $("mainDocTabs")?.addEventListener("click", (e) => {
-    const closeBtn = e.target.closest("[data-close]");
-    if (closeBtn) {
-      e.stopPropagation();
-      const tabKey = closeBtn.dataset.close;
-      closeDocumentTab(tabKey);
-      return;
-    }
-
     const tabEl = e.target.closest(".level-tab[data-tab]");
     if (tabEl) {
       switchDocumentTab(tabEl.dataset.tab);
