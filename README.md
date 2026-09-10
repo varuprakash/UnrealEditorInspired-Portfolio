@@ -9,6 +9,7 @@ The portfolio is designed to feel like working inside the Unreal Editor, featuri
 **[Open Portfolio](https://prakashvaruunrealeditorportfolio.vercel.app/)**
 
 ## Features
+<img width="2557" height="1339" alt="image" src="https://github.com/user-attachments/assets/e05e8e8a-035e-4d1e-949a-ab59925ca379" />
 
 * Unreal Engine 5.4 inspired interface
 * Interactive Editor-style viewport
